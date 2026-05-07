@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom palette matching the 'Prism of' magazine covers */
+  --color-blue-100: color-mix(in srgb, #2678f2 10%, white);
+  --color-blue-300: color-mix(in srgb, #2678f2 40%, white);
+  --color-blue-400: color-mix(in srgb, #2678f2 70%, white);
+  --color-blue-500: #2678f2;
+  --color-blue-600: #2678f2;
+  --color-blue-700: color-mix(in srgb, #2678f2 85%, black);
+  
+  --color-red-100: color-mix(in srgb, #f24a2e 10%, white);
+  --color-red-500: #f24a2e;
+  --color-red-600: #f24a2e;
+  
+  --color-pink-500: #f24a2e;
+  --color-pink-600: #f24a2e;
+  
+  --color-primary: #2678f2;
+  --color-accent: #f24a2e;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-slate-900 bg-[#F3F4F6];
+  }
+}
+
+/* Custom Scrollbar for inner overflow-auto areas */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6;
+}
