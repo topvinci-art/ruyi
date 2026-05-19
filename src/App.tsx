@@ -1402,7 +1402,7 @@ const Page16 = () => (
   </div>
 );
 
-const CasePage = ({ title, tool, prompt, themes, leftImage, rightImages, promptTextClassName, leftLabel, rightLabel, subLabel, subImages, extraContent, leftImageTitle, subImageLabels }: { 
+const CasePage = ({ title, tool, prompt, themes, leftImage, rightImages, promptTextClassName, leftLabel, rightLabel, subLabel, subImages, extraContent, midContent, midImage, leftImageTitle, subImageLabels }: { 
   title: string, 
   tool: string, 
   prompt: string | React.ReactNode, 
@@ -1415,6 +1415,8 @@ const CasePage = ({ title, tool, prompt, themes, leftImage, rightImages, promptT
   subLabel?: string,
   subImages?: string[],
   extraContent?: React.ReactNode,
+  midContent?: React.ReactNode,
+  midImage?: { url: string, label: string },
   leftImageTitle?: string,
   subImageLabels?: string[]
 }) => {
@@ -1424,7 +1426,8 @@ const CasePage = ({ title, tool, prompt, themes, leftImage, rightImages, promptT
   const allImages: { id: string, url: string, label?: string }[] = [
     ...(leftImage ? [{ id: 'left-img', url: leftImage, label: leftImageTitle }] : []),
     ...(rightImages ? rightImages.map((url, i) => ({ id: `right-img-${i}`, url })) : []),
-    ...(subImages ? subImages.map((url, i) => ({ id: `sub-img-${i}`, url, label: subImageLabels?.[i] })) : [])
+    ...(subImages ? subImages.map((url, i) => ({ id: `sub-img-${i}`, url, label: subImageLabels?.[i] })) : []),
+    ...(midImage ? [{ id: 'mid-img', url: midImage.url, label: midImage.label }] : [])
   ];
 
   return (
@@ -1458,6 +1461,27 @@ const CasePage = ({ title, tool, prompt, themes, leftImage, rightImages, promptT
                 </div>
               )}
            </div>
+
+           {midContent}
+
+           {midImage && (
+             <div className="flex flex-col gap-4 mb-6">
+               <h4 className="text-lg font-bold text-slate-900 tracking-tight border-b border-slate-100 pb-2">{midImage.label}</h4>
+               <motion.div 
+                 layoutId="mid-img"
+                 onClick={() => setSelectedId('mid-img')}
+                 className="rounded-2xl border border-slate-100 overflow-hidden bg-slate-50 flex items-center justify-center p-4 cursor-pointer hover:shadow-lg transition-all"
+               >
+                 <motion.img 
+                   layoutId="img-mid-img"
+                   src={midImage.url} 
+                   alt={midImage.label} 
+                   className="max-w-full h-auto object-contain" 
+                   referrerPolicy="no-referrer" 
+                 />
+               </motion.div>
+             </div>
+           )}
 
            {subLabel && (
              <h4 className="text-lg font-bold text-slate-900 tracking-tight mb-3 border-b border-slate-100 pb-1 mt-2">{subLabel}</h4>
@@ -1781,7 +1805,34 @@ const Page20 = () => <CasePage
   ]}
 />;
 
-const Page21 = () => (
+const Page21 = () => <CasePage 
+  title="图标库搭建" 
+  tool="Gemini" 
+  leftLabel="Prompt-GPT生成提示词"
+  subLabel="参考图"
+  rightLabel="矢量化处理"
+  prompt={`你作为一个资深的游戏ui，结合我给的参考图，设计以下4个通知/触达类权益图标：
+·用户进场通知
+·开播通知
+·专属进场通知
+·进场语
+图标的指代意义要更明确；
+展示方式图标采用白色填充色，背景为纯黑色，两列展示。图标比例为1:1，保持每个图标大小一致风格一致。
+用同一个世界观设定，确保未来50个图标的视觉风格高度统一。`}
+  midImage={{
+    url: "https://raw.githubusercontent.com/topvinci-art/images/main/20260512140502300.png",
+    label: "生成素材汇总整理"
+  }}
+  subImages={[
+    "https://raw.githubusercontent.com/topvinci-art/images/main/20260512120746149.png",
+    "https://raw.githubusercontent.com/topvinci-art/images/main/20260512120746174.png"
+  ]}
+  rightImages={[
+    "https://raw.githubusercontent.com/topvinci-art/images/main/20260512120916741.png"
+  ]}
+/>;
+
+const Page22 = () => (
   <div className="h-full flex flex-col justify-center items-center px-16 md:px-32 relative overflow-hidden bg-[#f0f9f6]">
     {/* High-fidelity mesh gradient background - Crystalline & Clear palette */}
     <div className="absolute inset-0 z-0 overflow-hidden">
@@ -1871,7 +1922,7 @@ const Page21 = () => (
 export default function App() {
   const [currentPage, setCurrentPage] = useState(0);
   const [globalLightbox, setGlobalLightbox] = useState<{ img: string, label: string } | null>(null);
-  const totalPages = 22;
+  const totalPages = 23;
 
   useEffect(() => {
     const handleOpenLightbox = (e: any) => setGlobalLightbox(e.detail);
@@ -1895,7 +1946,7 @@ export default function App() {
     <Page1 />, <Page2 />, <Page3 />, <Page4 />, <Page5 />, 
     <Page6 />, <Page7 />, <Page7_5 />, <Page8 />, <Page9 />, <Page10 />,
     <Page11 />, <Page12 />, <Page13 />, <Page14 />, <Page15 />,
-    <Page16 />, <Page17 />, <Page18 />, <Page19 />, <Page20 />, <Page21 />
+    <Page16 />, <Page17 />, <Page18 />, <Page19 />, <Page20 />, <Page21 />, <Page22 />
   ];
 
   return (
