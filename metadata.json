@@ -2,5 +2,5 @@
   "name": "AI Design Workflow Reimagined",
   "description": "A high-end presentation deck detailing the AI-integrated design workflow and SOP.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

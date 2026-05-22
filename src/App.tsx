@@ -28,7 +28,8 @@ import {
   ArrowRight,
   X,
   Maximize2,
-  Grid
+  Grid,
+  Users
 } from 'lucide-react';
 
 // --- Types ---
@@ -1917,12 +1918,762 @@ const Page22 = () => (
   </div>
 );
 
+const PageTimeline = () => {
+  const events = [
+    {
+      period: '2023 — 2024',
+      tool: 'Nano Banana / MJ / 即梦',
+      label: '可出氛围，难落地',
+      desc: '能生成风格参考图和氛围图，但完整H5页面的组件精度、文字排版、可切图程度始终无法直接交付，仍需大量人工二次处理。',
+      status: 'past',
+      tag: null,
+    },
+    {
+      period: '2025.03',
+      tool: 'GPT Image 2.0',
+      label: '质变节点',
+      desc: '首次实现原型图→可落地UI组件的完整链路。组件边界清晰、材质质感可控、标题字设计感强，生成图可直接进入切图流程。',
+      status: 'breakthrough',
+      tag: '工作流升级',
+    },
+    {
+      period: '2025.04',
+      tool: 'SOP v1.0 完成',
+      label: '流程固化',
+      desc: '基于 Image 2.0 能力边界，将工作流拆分为9个Stage，明确各阶段AI介入方式、卡点确认节点、交付规范。',
+      status: 'past',
+      tag: null,
+    },
+    {
+      period: '2025.05',
+      tool: 'Skill 上线',
+      label: '经验工具化',
+      desc: '将Prompt工程环节标准化：原型图 + 一句话描述 → 全套结构化提示词。把个人经验沉淀为团队可复用工具。',
+      status: 'now',
+      tag: '本次分享重点',
+    },
+  ];
+
+  return (
+    <div className="h-full p-10 md:p-16 flex flex-col bg-white">
+      <div className="flex justify-between items-start mb-12 border-b border-slate-100 pb-8 h-[160px]">
+        <div>
+          <span className="text-slate-400 font-bold text-sm tracking-[0.4em] uppercase mb-4 block">Context</span>
+          <h2 className="text-6xl font-light text-slate-900 tracking-tight">工具进化背景</h2>
+        </div>
+        <span className="text-sm font-bold text-slate-300 uppercase tracking-widest mt-auto mb-2">
+          AI-Assisted Design Timeline
+        </span>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center">
+        <div className="relative">
+          <div className="absolute top-[52px] left-0 right-0 h-[1px] bg-slate-100 z-0" />
+          <div className="grid grid-cols-4 gap-8 relative z-10">
+            {events.map((ev, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className="flex flex-col"
+              >
+                <div className="flex flex-col items-start mb-6">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
+                    {ev.period}
+                  </span>
+                  <div className={`w-4 h-4 rounded-full border-2 border-white shadow-sm ${
+                    ev.status === 'breakthrough' ? 'bg-blue-600 scale-125 shadow-blue-200' :
+                    ev.status === 'now' ? 'bg-slate-900' : 'bg-slate-300'
+                  }`} />
+                </div>
+                <div className={`flex-1 border p-6 ${
+                  ev.status === 'breakthrough' ? 'border-blue-200 bg-blue-50/40' :
+                  ev.status === 'now' ? 'border-slate-900 bg-slate-50' :
+                  'border-slate-100 bg-white'
+                }`}>
+                  {ev.tag && (
+                    <div className={`inline-flex items-center mb-4 px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full ${
+                      ev.status === 'breakthrough' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-white'
+                    }`}>
+                      {ev.tag}
+                    </div>
+                  )}
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{ev.tool}</div>
+                  <div className={`text-2xl font-medium mb-4 ${
+                    ev.status === 'breakthrough' ? 'text-blue-600' :
+                    ev.status === 'now' ? 'text-slate-900' : 'text-slate-600'
+                  }`}>{ev.label}</div>
+                  <p className="text-sm text-slate-500 leading-relaxed">{ev.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-12 flex items-center gap-3 text-sm text-slate-400">
+          <div className="w-4 h-[1px] bg-slate-200" />
+          <span>这套SOP和Skill，是在工具快速迭代中持续打磨的产物，不是一次性的规范文档。</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PageImage2Evolution = () => {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const cols = [
+    {
+      id: 'gemini',
+      tag: '工具代差参考',
+      tagColor: 'bg-red-500',
+      label: 'Gemini 生成',
+      img: 'https://raw.githubusercontent.com/topvinci-art/images/refs/heads/main/20260505024451011.png',
+      border: 'border-red-100 bg-red-50/20',
+      notes: [
+        { text: '组件边界模糊，文字破碎', ok: false },
+        { text: '整体偏概念图，无法直接切图', ok: false },
+        { text: '需大量人工二次处理', ok: false },
+      ],
+    },
+    {
+      id: 'v1',
+      tag: 'Image 2.0 · 初版',
+      tagColor: 'bg-amber-500',
+      label: '第一轮生成',
+      img: 'https://raw.githubusercontent.com/topvinci-art/images/main/20260507142207534.png',
+      border: 'border-amber-100 bg-amber-50/20',
+      notes: [
+        { text: '整体风格方向确立', ok: true },
+        { text: '主视觉黑金材质可用', ok: true },
+        { text: '组件细节待拆分精修', ok: null },
+      ],
+    },
+    {
+      id: 'v2',
+      tag: 'Image 2.0 · 组件化',
+      tagColor: 'bg-blue-600',
+      label: '组件拆分迭代',
+      img: 'https://raw.githubusercontent.com/topvinci-art/images/main/20260507140031296.png',
+      border: 'border-blue-100 bg-blue-50/20',
+      notes: [
+        { text: '单独生成每个UI组件', ok: true },
+        { text: '纯色背景方便抠图', ok: true },
+        { text: '材质与主视觉保持统一', ok: true },
+      ],
+    },
+    {
+      id: 'v3',
+      tag: 'Image 2.0 · 可交付',
+      tagColor: 'bg-emerald-600',
+      label: '最终落地版',
+      img: 'https://raw.githubusercontent.com/topvinci-art/images/main/20260507145000624.png',
+      border: 'border-emerald-100 bg-emerald-50/20',
+      notes: [
+        { text: '完整页面可直接切图', ok: true },
+        { text: '组件精度达到交付标准', ok: true },
+        { text: '无需大量人工二次处理', ok: true },
+      ],
+    },
+  ];
+
+  return (
+    <div className="h-full p-12 md:p-16 flex flex-col bg-white overflow-y-auto">
+      <div className="flex justify-between items-start mb-12 border-b border-slate-100 pb-8 h-[160px] shrink-0">
+        <div>
+          <span className="text-slate-400 font-bold text-lg tracking-[0.4em] uppercase mb-4 block">
+            Part 04 · Breakthrough
+          </span>
+          <h2 className="text-6xl font-light text-slate-900 tracking-tight">Image 2.0 带来了什么</h2>
+        </div>
+        <div className="h-14 flex items-center px-8 rounded-full bg-blue-600 text-white font-bold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(37,99,235,0.25)] shrink-0">
+          <Zap className="w-5 h-5 mr-3" /> 案例：金牌花艺师
+        </div>
+      </div>
+
+      <div className="flex-1 grid grid-cols-4 gap-10 items-stretch">
+        {cols.map((col) => (
+          <div key={col.id} className="flex flex-col gap-6">
+            <span className={`text-2xl font-black text-white px-5 py-2 rounded-2xl uppercase tracking-widest self-start ${col.tagColor}`}>
+              {col.tag}
+            </span>
+            <div className={`flex-1 rounded-3xl border ${col.border} p-8 flex flex-col gap-8`}>
+              <div className="text-3xl font-extrabold text-slate-900 uppercase tracking-wide">{col.label}</div>
+              <div
+                className="h-[320px] w-full bg-white rounded-2xl border border-slate-100 overflow-hidden flex items-center justify-center cursor-zoom-in hover:shadow-2xl transition-all shrink-0"
+                onClick={() => setSelected(col.id)}
+              >
+                <img
+                  src={col.img}
+                  alt={col.label}
+                  className="w-full h-full object-contain p-4"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <ul className="space-y-5">
+                {col.notes.map((n, i) => (
+                  <li key={i} className={`flex items-start gap-3 text-2xl font-medium leading-relaxed ${
+                    n.ok === false ? 'text-red-500' :
+                    n.ok === true ? 'text-slate-500' : 'text-amber-600'
+                  }`}>
+                    <span className="mt-1 shrink-0 font-bold">{n.ok === false ? '✕' : n.ok === true ? '✓' : '→'}</span>
+                    <span>{n.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 border-t border-slate-100 pt-6 flex items-center justify-between shrink-0">
+        <span className="text-2xl text-slate-500 leading-relaxed">
+          Image 2.0 第一次让 AI 生成图可以
+          <strong className="text-slate-900 ml-1 font-extrabold bg-blue-50 px-2.5 py-1 rounded-lg">落地直接敲定视觉</strong>，跳过原本反复试错的流程。
+        </span>
+      </div>
+
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-xl flex items-center justify-center p-10"
+            onClick={() => setSelected(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white rounded-3xl shadow-2xl max-h-[90vh] w-auto max-w-[90vw] relative flex items-center justify-center p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={cols.find(c => c.id === selected)?.img}
+                className="max-h-[85vh] w-auto object-contain rounded-2xl"
+                referrerPolicy="no-referrer"
+              />
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute top-4 right-4 w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center"
+              >
+                <X className="w-5 h-5 text-slate-600" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const PageBottleneck = () => {
+  const paths = [
+    {
+      type: '有 Prompt 经验',
+      colorBorder: 'border-blue-200',
+      colorBg: 'bg-blue-50/30',
+      steps: [
+        { text: '读懂原型图', problem: false },
+        { text: '判断风格方向', problem: false },
+        { text: '写出结构化 Prompt', problem: false },
+        { text: '多轮调整关键词', problem: false },
+        { text: '生成可用素材', problem: false },
+      ],
+      time: '30–60 min',
+      timeColor: 'text-blue-600',
+      result: '高质量输出',
+      resultBg: 'bg-blue-600 text-white',
+    },
+    {
+      type: '没有 Prompt 经验',
+      colorBorder: 'border-red-200',
+      colorBg: 'bg-red-50/30',
+      steps: [
+        { text: '读懂原型图', problem: false },
+        { text: '不知道从哪里描述风格', problem: true },
+        { text: '随意输入，反复试错', problem: true },
+        { text: '结果与预期偏差大', problem: true },
+        { text: '放弃或找有经验的同事帮忙', problem: true },
+      ],
+      time: '2–4 hrs 或放弃',
+      timeColor: 'text-red-500',
+      result: '低质量或不可用',
+      resultBg: 'bg-red-500 text-white',
+    },
+  ];
+
+  return (
+    <div className="h-full p-10 md:p-16 flex flex-col bg-white">
+      <div className="flex justify-between items-start mb-12 border-b border-slate-100 pb-8 h-[160px]">
+        <div>
+          <span className="text-slate-400 font-bold text-sm tracking-[0.4em] uppercase mb-4 block">
+            Part 04 · Problem
+          </span>
+          <h2 className="text-6xl font-light text-slate-900 tracking-tight">但出现了新瓶颈</h2>
+        </div>
+        <div className="h-14 flex items-center px-8 rounded-full bg-pink-500 text-white font-bold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(242,74,46,0.3)] shrink-0">
+          <AlertCircle className="w-5 h-5 mr-3" /> Prompt 经验差距被放大
+        </div>
+      </div>
+
+      <div className="flex-1 grid grid-cols-2 gap-16">
+        {paths.map((p, idx) => (
+          <div key={idx} className={`border-2 ${p.colorBorder} ${p.colorBg} p-12 rounded-[2rem] flex flex-col gap-8`}>
+            <h3 className="text-4xl font-bold text-slate-900 tracking-tight">{p.type}</h3>
+            <div className="flex-1 flex flex-col justify-center gap-2">
+              {p.steps.map((step, i) => (
+                <div key={i} className="flex items-center gap-5">
+                  <div className="flex flex-col items-center shrink-0 w-8">
+                    <div className="w-3.5 h-3.5 rounded-full bg-slate-300 border-2 border-white shadow-sm" />
+                    {i < p.steps.length - 1 && <div className="w-[1.5px] h-10 bg-slate-200" />}
+                  </div>
+                  <p className={`text-2xl py-3 leading-tight font-medium ${step.problem ? 'text-red-500 italic' : 'text-slate-700'}`}>
+                    {step.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-slate-200/50 pt-8 flex items-center justify-between">
+              <div>
+                <div className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1.5">时间成本</div>
+                <div className={`text-4xl font-extrabold tracking-tight ${p.timeColor}`}>{p.time}</div>
+              </div>
+              <div className={`px-8 py-3.5 rounded-full text-lg font-bold shadow-sm ${p.resultBg}`}>{p.result}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 flex items-center gap-4 text-lg text-slate-600">
+        <div className="w-6 h-[1px] bg-slate-300" />
+        <span>Image 2.0 提高了上限，但同时拉大了团队内部的能力差距。</span>
+        <span className="text-blue-600 font-bold text-xl ml-2">→ 需要一个工具来消除这个差距。</span>
+      </div>
+    </div>
+  );
+};
+
+const PageSkill = () => {
+  const [openId, setOpenId] = useState<string | null>('A-00');
+  const [showMore, setShowMore] = useState(false);
+
+  const toggle = (id: string) => setOpenId(openId === id ? null : id);
+
+  const questions = [
+    {
+      id: 'Q1',
+      title: '这次活动的页面类型是？',
+      options: [
+        { label: 'A', text: '半窗固定尺寸（750×1036，不可滚动）' },
+        { label: 'B', text: '超出半窗尺寸（需滚动或分屏）', selected: true },
+        { label: 'C', text: 'H5 页面（750×1624，可滚动）' }
+      ]
+    },
+    {
+      id: 'Q2',
+      title: '这次活动在乙女游戏风格基础上，偏向哪个子方向？',
+      options: [
+        { label: 'A', text: '国风古典系' },
+        { label: 'B', text: '现代都市系' },
+        { label: 'C', text: '奇幻梦境系' },
+        { label: 'D', text: '清甜日常系' },
+        { label: 'E', text: '自定义描述（请直接输入）', selected: true, customText: '深色奢靡古典' }
+      ]
+    },
+    {
+      id: 'Q3',
+      title: '主色调偏向哪个方向？',
+      options: [
+        { label: 'A', text: '暖色系（红金 / 玫瑰 / 橙）' },
+        { label: 'B', text: '冷色系（蓝紫 / 烟青 / 银）' },
+        { label: 'C', text: '中性（奶白 / 米金 / 香槟）' },
+        { label: 'D', text: '跟着风格走，不指定', selected: true, matchText: '自动匹配：黑金（深黑 / 鎏金 / 香槟金）' }
+      ]
+    },
+    {
+      id: 'Q4',
+      title: '这次活动有没有参考的视觉竞品或灵感图？',
+      options: [
+        { label: 'A', text: '有（请上传图片或文字描述）', selected: true, imageText: '已上传：黑色木质 + 鎏金柜台氛围图' },
+        { label: 'B', text: '没有，跳过' }
+      ]
+    },
+    {
+      id: 'Q5',
+      title: '用 1～3 个词 描述你希望这次活动给用户的感觉，比如「温柔治愈」「华丽梦幻」「贵族典雅」。',
+      answer: '「华丽梦幻」「贵族典雅」'
+    }
+  ];
+
+  const mainOutputs = [
+    {
+      id: 'A-00', name: '完整页面合成图', sub: '整页预览',
+      zh: '高档古典奢华风格的调香/花艺店完整页面视觉合成参考图。色调为神秘典雅的黑金（深黑 / 鎏金 / 香槟金），背景有虚化的拱门及微弱的琥珀色氛围光，前景是精致的木质陈列柜，展示着工艺雕花香水瓶与奇幻花艺材料卡槽。整体界面排版极具奢华贵族感，高细节和精美材质质感。\n纯色背景，方便后期抠图',
+      en: 'Complete full-page composition preview and main visual reference of a luxury alchemist or perfume boutique, resolution 750x1624. Classical styling theme with mysterious dark and gold tones, hazy background with elegant windows emitting warm amber stardust glow, front deep wood shelves and exquisite ornate bottles, seamless interface layout demonstrating premium gold-filigree frames and high-end alchemical ingredients cards, absolute luxury classical aesthetic, high detailed rendering, clear shapes, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 A-00 为整页合成视觉效果，适合在流程最初定位美术和氛围基调，随后可使用 A-EXTRA 快速做批量资产拆分。',
+    },
+    {
+      id: 'A-01', name: '头图异形装饰件', sub: '头图区',
+      zh: '横向异形头图装饰件，中心为原型已有标题的装饰艺术字轮廓，周围有香水瓶剪影、金色画框、拱门轮廓、垂落花藤与水晶吊灯光点，右上角留空约 120px，下边缘有花藤和金色粒子向下延伸\n纯色背景，方便后期抠图',
+      en: 'Component design following the main visual style: a wide irregular header ornament with an ornamental title lettering silhouette in the center, perfume bottle silhouettes, gilded picture-frame edges, subtle arch motifs, hanging floral vines, chandelier light particles, lower-edge flowers and golden sparkles extending downward for page blending, upper right area left empty for a function button, luxury black and gold classical perfume boutique mood, clean smooth surfaces, minimal texture, soft natural shading, clear large shapes, smooth rendering, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 头图推荐用「黑金匾额 + 香水瓶 + 花藤」组合，能贴合调香店，也不会脱离花艺主题。',
+    },
+    {
+      id: 'A-02', name: '全页背景底图 750×1624', sub: '背景底图',
+      zh: '古典奢华风格的调香店背景，750×1624分辨率。中央后方有朦胧古典的拱形门窗，散发温润微弱的琥珀色环境光，前景有深色质感木质柜台及陈列香水瓶的暗色木格架。整体材质纹理优雅、环境氛围梦幻，背景左右下角留空，色调为黑金，给人历史底蕴高奢底感。\n纯色背景，方便后期抠图',
+      en: 'Classical luxury perfume boutique background, resolution 750x1624. Intricate arched display windows in the hazy background with warm amber backlighting, deep dark wood countertop in the foreground and premium dark wood display shelves, classical aesthetics with noble history vibe, ultra-luxury atmosphere, soft ambient glow, minimal clutter, cinematic lighting, very high detail, clean smooth rendering, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 建议调低背景亮度，让主栏组件 and 交互按钮在黑金底图上产生高对比度的光感。',
+    },
+    {
+      id: 'A-03', name: '导航 Tab 栏', sub: '选中态 + 未选中态',
+      zh: '4 个横向胶囊式 Tab，包含选中与未选中态；选中态为黑金高亮、金边发光、轻微凸起，未选中态为暗黑半透明底、细金描边、低亮度\n纯色背景，方便后期抠图',
+      en: 'Component design following the main visual style: a four-segment horizontal navigation tab bar showing selected and unselected states, selected tab with black enamel fill, champagne gold outline, soft amber glow and slightly stronger presence, unselected tabs with dark translucent fill, thin gold border and lower brightness, luxury perfume counter nameplate feeling, clean smooth surfaces, minimal texture, smooth rendering, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 Tab 不要做成厚重金块，金边细一点会更高级。',
+    },
+    {
+      id: 'A-05', name: '花艺材料横向列表', sub: '材料收集模块',
+      zh: '6 个横向材料卡槽，首个卡槽带虚线选中框，其余为普通卡；每张卡右上角有圆形数量徽标，卡内为不同材料图标承载位，包含种子、晶体、香氛瓶、羽毛、泪滴宝石、星屑瓶的无文字图形\n纯色背景，方便后期抠图',
+      en: 'Component design following the main visual style: a horizontal collection strip with six elegant ingredient item cards, the first card showing a dashed selected frame, each card with a small circular count badge in the upper right, icon placeholders for a mysterious seed, sun crystal, perfume bottle essence, feather, moon tear gem, and rainbow stardust vial, black gold card frames, ivory inner panels, refined alchemy ingredient UI, clean smooth surfaces, minimal texture, smooth rendering, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 材料图标建议做成「调香原料瓶 + 花艺素材」质感，会比普通道具图更贴主题。',
+    },
+    {
+      id: 'A-06', name: '培育阶段按钮组 620×86', sub: '功能控制区',
+      zh: '3 个横排的培育状态选择按钮。首个按钮呈选中奢华金边状态，内部是金沙鎏光质感；其余按钮为暗黑不透明金属外壳，带有纤细微弱的金边。整体按钮无内部文字，仅保留图标和外框，风格奢华高贵，背景为纯黑，便于后期抠图。\n纯色背景，方便后期抠图',
+      en: 'Three horizontal growth cycle selection tabs/buttons without any text. The first button in active state features dark gold-enamel textured core, subtle golden embers, champagne gilded framing. The inactive buttons feature a sleek dark metal coat with hairline gold edges, highly tactile, classical luxury styling, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 通过精细的金沙边缘对比，可以突出当前活动的阶段，体现精致质感。',
+    },
+    {
+      id: 'A-07', name: '配方材料组合 680×240', sub: '配方组合模块',
+      zh: '由 3 个横排圆角矩形槽位组成的配方组合组件，相邻卡槽之间由精致的带有奢华雕花的金色加号连接。第一个卡槽带有细金虚线选中框，其余为普通卡槽。内部有无文字的配方材料展示位，纯黑背景，以便后期方便切图。\n纯色背景，方便后期抠图',
+      en: 'A formula combination container composed of 3 horizontal rounded card sockets connected by intricate golden plus (+) signs with detailed baroque relief carvings. The first card socket highlights a gold dashed highlight border, while other slots remain inactive dark mahogany slots, alchemist slot UI style, solid pure color background (#00FF7F cyan-green or #FF00FF magenta) for easy post-processing cutout',
+      note: '💡 金色加号一定要做出雕花细节，增加工艺品的精致度。',
+    },
+  ];
+
+  const extraContent = `1. 头图异形装饰件（黑金匾额、香水瓶、花藤、吊灯光点与右上角留空）
+2. 导航 Tab 栏选中态（黑金高亮、金边发光、轻微凸起）
+3. 导航 Tab 栏未选中态（暗黑半透明底、低亮金边）
+4. 数据提示栏（左侧信息位、右侧链接位与延伸金色细线）
+5. 六个材料卡槽（数量徽标、黑金卡框、不同材料图标承载位）
+6. 材料选中虚线框（虚线高亮边界）
+7. 三个培育阶段按钮（选中态与未激活态差异）
+8. 三材料配方组合组件（三卡横排、两个金色加号、首卡选中框）
+9. 培育结果预览卡（虚线框、结果图标承载位、奖励承载位）
+10. 库存倒计时提示标签（小图标、两行信息位与橙金高亮位）
+11. 底部主按钮（黑金按钮、花藤细节与右侧折线光轨）
+
+要求：所有组件去掉文字，保持当前设计，高细节纹理，背景统一为 #00FF7F 青绿（或 #FF00FF 品红）以便切图。`;
+
+  return (
+    <div className="h-full p-12 md:p-16 flex flex-col bg-white overflow-y-auto">
+      <div className="flex justify-between items-start mb-12 border-b border-slate-100 pb-8 h-[160px] shrink-0">
+        <div>
+          <span className="text-slate-400 font-bold text-lg tracking-[0.4em] uppercase mb-4 block">
+            Part 04 · Solution
+          </span>
+          <h2 className="text-6xl font-light text-slate-900 tracking-tight">Skill：把经验变成工具</h2>
+        </div>
+        <div className="flex items-center gap-4 mt-auto mb-2">
+          <span className="text-lg font-bold text-slate-500 uppercase tracking-widest">输入门槛</span>
+          <div className="flex items-center gap-3 px-6 py-3 bg-slate-900 text-white rounded-full text-base font-bold shadow-md">
+            <span className="line-through text-slate-400">懂 Prompt</span>
+            <ArrowRight className="w-4 h-4 text-slate-400" />
+            <span>看得懂原型图</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 grid grid-cols-12 gap-10 min-h-0 overflow-visible">
+
+        {/* 左：INPUT */}
+        <div className="col-span-3 flex flex-col gap-6 overflow-visible">
+          <div className="pb-3 border-b border-slate-100 flex items-center">
+            <span className="px-6 py-2 rounded-full bg-[#F24A2E] text-white font-extrabold text-lg tracking-wider shadow-xs">
+              1. 原型图+活动名称+一句话介绍
+            </span>
+          </div>
+          <div className="border border-slate-100 rounded-2xl overflow-hidden shadow-xs w-1/2 mx-auto aspect-[3/4] bg-slate-50 flex items-center justify-center">
+            <img
+              src="https://raw.githubusercontent.com/topvinci-art/images/refs/heads/main/20260505024451028.png"
+              alt="金牌花艺师原型图"
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+          <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-6 flex items-center justify-center min-h-[140px]">
+            <p className="text-xl text-slate-700 leading-relaxed">
+              「<span className="text-[#F24A2E]">金牌花艺师</span>，<span className="text-[#1677FF]">整体比较奢靡有点古典艺术元素的，有历史底蕴的奢侈品调香店</span>。」
+            </p>
+          </div>
+        </div>
+
+        {/* 中：PROCESS */}
+        <div className="col-span-5 flex flex-col gap-4 overflow-visible">
+          <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+            <span className="px-6 py-2 rounded-full bg-[#FA8C16] text-white font-extrabold text-lg tracking-wider shadow-xs">
+              2. 问答节点（逐条）
+            </span>
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-400">
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+              <span>逐条问答，不一次性抛出所有问题</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {questions.map((q) => (
+              <div
+                key={q.id}
+                className={`border border-orange-100 bg-orange-50/20 rounded-2xl p-5 shadow-xs flex flex-col justify-between ${
+                  q.id === 'Q5' ? 'col-span-2' : ''
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-3 mb-3 border-b border-orange-100/50 pb-2">
+                    <span className="text-xs font-black bg-[#FA8C16] text-white px-2.5 py-0.5 rounded font-mono">
+                      {q.id}
+                    </span>
+                    <span className="text-sm font-bold text-slate-700 leading-tight">
+                      {q.title}
+                    </span>
+                  </div>
+
+                  {'answer' in q && q.answer ? (
+                    <div className="bg-orange-500/10 border border-orange-300 rounded-xl p-4 text-orange-950 font-bold text-base flex items-center justify-between">
+                      <span className="leading-tight">{q.answer}</span>
+                      <CheckCircle2 className="w-5 h-5 text-orange-600 shrink-0" />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {'options' in q && q.options?.map((opt) => (
+                        <div
+                          key={opt.label}
+                          className={`flex flex-col rounded-xl p-2.5 transition-all text-xs border ${
+                            opt.selected
+                              ? 'bg-orange-500/10 border-orange-300 text-orange-950 font-bold'
+                              : 'bg-white border-slate-100 text-slate-500 font-normal'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold ${
+                              opt.selected
+                                ? 'bg-[#FA8C16] text-white'
+                                : 'bg-slate-100 text-slate-400'
+                            }`}>
+                              {opt.label}
+                            </span>
+                            <span className="flex-1 leading-tight">{opt.text}</span>
+                            {opt.selected && <CheckCircle2 className="w-4 h-4 text-orange-600 shrink-0" />}
+                          </div>
+
+                          {opt.selected && 'customText' in opt && opt.customText && (
+                            <div className="mt-2 ml-7 pl-2.5 border-l-2 border-emerald-400 text-emerald-800 font-semibold bg-emerald-50 py-1 px-2 rounded text-[11px]">
+                              输入值：{opt.customText}
+                            </div>
+                          )}
+                          {opt.selected && 'matchText' in opt && opt.matchText && (
+                            <div className="mt-2 ml-7 pl-2.5 border-l-2 border-emerald-400 text-emerald-800 font-semibold bg-emerald-50 py-1 px-2 rounded text-[11px]">
+                              {opt.matchText}
+                            </div>
+                          )}
+                          {opt.selected && 'imageText' in opt && opt.imageText && (
+                            <div className="mt-2 ml-7 pl-2.5 border-l-2 border-emerald-400 text-emerald-800 font-semibold bg-emerald-50 py-1 px-2 rounded text-[11px] flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                              {opt.imageText}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 右：OUTPUT */}
+        <div className="col-span-4 flex flex-col gap-3 overflow-visible">
+          <div className="pb-3 border-b border-slate-100 flex items-center">
+            <span className="px-6 py-2 rounded-full bg-[#1677FF] text-white font-extrabold text-lg tracking-wider shadow-xs">
+              3. 版本 A全套提示词
+            </span>
+          </div>
+
+          {mainOutputs.map((out) => (
+            <div key={out.id} className="border border-slate-100 rounded-2xl overflow-hidden shadow-xs bg-white">
+              <button
+                className="w-full flex items-center gap-4 p-5 text-left hover:bg-slate-50/80 transition-colors"
+                onClick={() => toggle(out.id)}
+              >
+                <span className="text-xs font-black font-mono bg-slate-100 text-slate-600 px-3 py-1 rounded shrink-0">
+                  {out.id}
+                </span>
+                <span className="text-xl font-extrabold text-slate-900 flex-1">{out.name}</span>
+                <span className="text-sm font-bold text-slate-400 shrink-0 bg-slate-50 px-2 py-0.5 rounded">{out.sub}</span>
+                <ChevronRight className={`w-5 h-5 text-slate-300 shrink-0 transition-transform ${openId === out.id ? 'rotate-90' : ''}`} />
+              </button>
+              {openId === out.id && (
+                <div className="border-t border-slate-100 bg-slate-50/10">
+                  <div className="grid grid-cols-2 divide-x divide-slate-100">
+                    <div className="p-6">
+                      <div className="text-base font-black text-slate-400 uppercase tracking-widest mb-4">中文主体</div>
+                      <p className="text-lg text-slate-700 leading-relaxed font-mono whitespace-pre-wrap font-medium">{out.zh}</p>
+                    </div>
+                    <div className="p-6">
+                      <div className="text-base font-black text-slate-400 uppercase tracking-widest mb-4">English Prompt</div>
+                      <p className="text-lg text-slate-600 leading-relaxed font-mono">{out.en}</p>
+                    </div>
+                  </div>
+                  <div className="border-t border-slate-50 px-6 py-4 text-base font-medium text-slate-500 italic bg-blue-50/10">{out.note}</div>
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* A-EXTRA */}
+          <div className="border border-blue-100 bg-blue-50/20 rounded-2xl overflow-hidden shadow-xs">
+            <button
+              className="w-full flex items-center gap-4 p-5 text-left hover:bg-blue-50/40 transition-colors"
+              onClick={() => toggle('A-EXTRA')}
+            >
+              <span className="text-xs font-black font-mono bg-blue-600 text-white px-3 py-1 rounded shrink-0">
+                A-EXTRA
+              </span>
+              <span className="text-xl font-extrabold text-slate-900 flex-1">组件资产拆分图</span>
+              <span className="text-sm font-bold text-slate-500 shrink-0 bg-blue-100/40 px-2 py-0.5 rounded">11 个组件一次出图</span>
+              <ChevronRight className={`w-5 h-5 text-slate-300 shrink-0 transition-transform ${openId === 'A-EXTRA' ? 'rotate-90' : ''}`} />
+            </button>
+            {openId === 'A-EXTRA' && (
+              <div className="border-t border-blue-100 bg-white">
+                <div className="p-6">
+                  <div className="text-base font-black text-slate-400 uppercase tracking-widest mb-4">拆分清单</div>
+                  <p className="text-lg text-slate-700 leading-relaxed font-mono whitespace-pre-wrap font-medium">{extraContent}</p>
+                </div>
+                <div className="border-t border-blue-50 px-6 py-4 text-base font-medium text-slate-500 italic">
+                  💡 A-EXTRA 适合把 A-00 整页参考图作为输入图后批量拆组件；如果某个材料图标要单独精修，优先使用 A-05 的单组件 Prompt。
+                </div>
+              </div>
+            )}
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PageClosedLoop = () => {
+  const stages = [
+    { id: '01', label: '需求承接', sub: '信息收集', hl: false },
+    { id: '02', label: 'Prompt工程', sub: 'Skill嵌入节点', hl: true },
+    { id: '03', label: '视觉选定', sub: '卡点A', hl: false },
+    { id: '04', label: '组件拆分', sub: '质量处理', hl: false },
+    { id: '05', label: 'PS组装', sub: '卡点B', hl: false },
+    { id: '06', label: '完整页面', sub: '卡点C', hl: false },
+    { id: '07', label: '图层规范', sub: '切图', hl: false },
+    { id: '08', label: 'PSD→Figma', sub: '交付', hl: false },
+    { id: '09', label: '视觉走查', sub: '上线复盘', hl: false },
+  ];
+
+  const cards = [
+    {
+      icon: Cpu,
+      title: 'Skill 做了什么',
+      desc: '在 Stage 02 节点，把「原型图 + 一句话描述」转化为完整结构化 Prompt，替代人工写提示词环节。',
+      color: 'text-blue-600',
+    },
+    {
+      icon: Users,
+      title: '谁可以用',
+      desc: '任何能看懂原型图的设计师。不需要 Prompt 写作经验，不需要了解各 AI 工具 of 参数语法。',
+      color: 'text-slate-900',
+    },
+    {
+      icon: Target,
+      title: '带来了什么',
+      desc: 'SOP 从「个人规范」升级为「团队工具链」——可复用、可迭代、可持续沉淀新案例和新风格。',
+      color: 'text-emerald-600',
+    },
+  ];
+
+  return (
+    <div className="h-full p-10 md:p-16 flex flex-col bg-white">
+      <div className="flex justify-between items-start mb-12 border-b border-slate-100 pb-8 h-[160px]">
+        <div>
+          <span className="text-slate-400 font-bold text-sm tracking-[0.4em] uppercase mb-4 block">
+            Part 04 · Summary
+          </span>
+          <h2 className="text-6xl font-light text-slate-900 tracking-tight">SOP + Skill = 完整闭环</h2>
+        </div>
+        <div className="text-right mt-auto mb-2 flex flex-col gap-1.5">
+          <div className="text-2xl font-bold text-slate-900 tracking-tight">任何设计师都可以走完</div>
+          <div className="text-lg text-slate-500 font-medium">不依赖个人 Prompt 经验积累</div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center gap-14">
+        <div className="relative">
+          <div className="absolute top-[10px] left-0 right-0 h-[1.5px] bg-slate-200/60 z-0" />
+          <div className="grid grid-cols-9 gap-3 relative z-10">
+            {stages.map((s) => (
+              <div key={s.id} className="flex flex-col items-center gap-4">
+                <div className={`w-5 h-5 rounded-full border-2 border-white shadow-sm ${
+                  s.hl ? 'bg-blue-600 scale-125 shadow-blue-200' : 'bg-slate-200'
+                }`} />
+                <div className={`text-center p-4 rounded-xl w-full ${
+                  s.hl ? 'bg-blue-50 border border-blue-200 shadow-sm' : 'bg-slate-50 border border-slate-100'
+                }`}>
+                  <div className={`text-xs font-bold uppercase tracking-widest mb-1.5 ${
+                    s.hl ? 'text-blue-600' : 'text-slate-400'
+                  }`}>Stage {s.id}</div>
+                  <div className={`text-base font-extrabold leading-tight ${
+                    s.hl ? 'text-blue-700' : 'text-slate-700'
+                  }`}>{s.label}</div>
+                  <div className="text-xs text-slate-400 mt-1 font-medium">{s.sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-8">
+          {cards.map((card, idx) => {
+            const Icon = card.icon;
+            return (
+              <div key={idx} className="border border-slate-100 p-10 rounded-2xl bg-slate-50/30 shadow-xs">
+                <Icon className={`w-8 h-8 ${card.color} mb-5`} />
+                <h4 className="text-2xl font-bold text-slate-900 mb-4">{card.title}</h4>
+                <p className="text-base text-slate-600 leading-relaxed font-normal">{card.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="border-t border-slate-100 pt-8 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-pulse" />
+            <span className="text-2xl font-semibold text-slate-900">
+              这套工作流现在任何一个设计师都可以走完。
+            </span>
+          </div>
+          <span className="text-base font-bold text-slate-300 uppercase tracking-widest">
+            AI-Assisted Design SOP v1.1
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(0);
   const [globalLightbox, setGlobalLightbox] = useState<{ img: string, label: string } | null>(null);
-  const totalPages = 23;
+  const totalPages = 28;
 
   useEffect(() => {
     const handleOpenLightbox = (e: any) => setGlobalLightbox(e.detail);
@@ -1943,10 +2694,17 @@ export default function App() {
   }, []);
 
   const pages = [
-    <Page1 />, <Page2 />, <Page3 />, <Page4 />, <Page5 />, 
+    <Page1 />, <Page2 />, <Page3 />, <Page4 />,
+    <PageTimeline />,
+    <Page5 />,
     <Page6 />, <Page7 />, <Page7_5 />, <Page8 />, <Page9 />, <Page10 />,
     <Page11 />, <Page12 />, <Page13 />, <Page14 />, <Page15 />,
-    <Page16 />, <Page17 />, <Page18 />, <Page19 />, <Page20 />, <Page21 />, <Page22 />
+    <Page16 />, <Page17 />, <Page18 />, <Page19 />, <Page20 />, <Page21 />,
+    <PageImage2Evolution />,
+    <PageBottleneck />,
+    <PageSkill />,
+    <PageClosedLoop />,
+    <Page22 />,
   ];
 
   return (
